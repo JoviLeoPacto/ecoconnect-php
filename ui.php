@@ -1,13 +1,13 @@
 <?php
 // UI kit: PHP versions of the React components (AppShell, Modal, StatCard, AuthLayout, ...).
-// They output the same Tailwind classes as the React site; styles are compiled into assets/app.css.
+// They output the same Tailwind classes as the React site; styles are compiled into app.css.
 require_once __DIR__ . '/icons.php';
 
 function ic(string $name, string $class = 'h-[18px] w-[18px]'): string {
     $p = ICONS[$name] ?? '';
     return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' . $class . '" aria-hidden="true">' . $p . '</svg>';
 }
-function mins(): string { return (string)@filemtime(__DIR__ . '/assets/app.css'); }
+function mins(): string { return (string)@filemtime(__DIR__ . '/app.css'); }
 function media_url(?array $u, string $type = 'photo'): string {
     if (!$u) return '';
     if ($type === 'photo') return !empty($u['has_photo']) ? 'media.php?t=photo&u=' . (int)$u['id'] . '&v=' . urlencode((string)($u['photo_v'] ?? '')) : '';
@@ -81,11 +81,11 @@ function brand_link(string $href, string $extra = ''): string {
 /* ---------- page frame ---------- */
 function page_head(string $title): void {
     echo '<!doctype html><html lang="en"><head><meta charset="UTF-8">'
-        . '<link rel="icon" type="image/svg+xml" href="assets/ecoconnect.svg"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"><link rel="manifest" href="assets/manifest.webmanifest">'
+        . '<link rel="icon" type="image/svg+xml" href="ecoconnect.svg"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest">'
         . '<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#15803d">'
         . '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
         . '<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">'
-        . '<link rel="stylesheet" href="assets/app.css?v=' . mins() . '">'
+        . '<link rel="stylesheet" href="app.css?v=' . mins() . '">'
         . '<script>(function(){try{var t=localStorage.getItem("ecoconnect_theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}if(t==="dark")document.documentElement.classList.add("dark")}catch(e){}})();</script>'
         . '<title>' . e($title) . '</title></head><body>';
 }
@@ -102,7 +102,7 @@ function toasts_html(): string {
     return '<div class="fixed top-4 inset-x-4 sm:inset-x-auto sm:right-4 z-[3000] flex flex-col gap-2 sm:w-96 pointer-events-none" role="status" aria-live="polite">' . $out . '</div>';
 }
 function page_foot(string $extra = ''): void {
-    echo toasts_html() . $extra . '<script src="assets/app.js?v=' . (string)@filemtime(__DIR__ . '/assets/app.js') . '"></script></body></html>';
+    echo toasts_html() . $extra . '<script src="app.js?v=' . (string)@filemtime(__DIR__ . '/app.js') . '"></script></body></html>';
 }
 
 /* ---------- Modal (server-rendered: closing goes back to $closeHref; $closeHref = '' keeps it client-side) ---------- */
