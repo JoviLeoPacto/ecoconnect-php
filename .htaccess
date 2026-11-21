@@ -1,7 +1,15 @@
 # Keep internal files from being opened directly in the browser
-<FilesMatch "^(config\.php|lib\.php|README\.md|HOSTING\.md)$">
+<FilesMatch "^(config\.php|lib\.php|ui\.php|icons\.php|install_db\.php|README\.md|HOSTING\.md|RAILWAY\.md)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
 </FilesMatch>
 DirectoryIndex index.php
+<IfModule mod_php.c>
+  php_value upload_max_filesize 6M
+  php_value post_max_size 8M
+</IfModule>
+<IfModule mod_php8.c>
+  php_value upload_max_filesize 6M
+  php_value post_max_size 8M
+</IfModule>
