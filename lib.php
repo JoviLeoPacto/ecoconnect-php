@@ -22,6 +22,11 @@ function db(): PDO {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
+        if (empty($_SESSION['db_ready'])) {            // first run: build tables + starter accounts automatically
+            require_once __DIR__ . '/install_db.php';
+            ensure_installed();
+            $_SESSION['db_ready'] = true;
+        }
     }
     return $pdo;
 }
