@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               [$v['username'], $v['hash'], $v['first_name'], $v['last_name'], $v['email'], $v['phone'], $bid, image_data_uri($_FILES['id_image'])]);
             unset($_SESSION['signup']);
             flash('Account created! You can sign in while your ID is being verified.');
-            redirect('index.php');
+            redirect('login.php');
         }
     }
 }
@@ -101,4 +101,4 @@ if ($step === 1): ?>
   <div class="pt-1"><button class="eco-btn-primary" data-needs-consent disabled>Create account</button></div>
 </form>
 <?php endif;
-auth_end('Already have an account? <a href="index.php" class="eco-link">Sign in</a>');
+auth_end('Already have an account? <a href="login.php" class="eco-link">Sign in</a>');

@@ -101,7 +101,7 @@ function user(): ?array {
     }
     return $u;
 }
-function require_login(): array { $u = user(); if (!$u) redirect('index.php'); return $u; }
+function require_login(): array { $u = user(); if (!$u) redirect('login.php'); return $u; }
 function require_resident(): array { $u = require_login(); if (is_official($u)) redirect('admin.php'); return $u; }
 function require_official(): array {
     $u = require_login();

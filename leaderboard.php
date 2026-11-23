@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/lib.php';
-$me = user(); if (!$me) redirect('index.php');
+$me = user(); if (!$me) redirect('login.php');
 $bid = (int)$me['barangay_id'];
 $lead = all("SELECT " . USER_COLS . " FROM users u WHERE u.role='resident' AND u.is_verified=1 AND u.barangay_id = ? ORDER BY u.points DESC, u.username LIMIT 50", [$bid]);
 simple_start('Leaderboard', 'Top environmental contributors in ' . $me['barangay'], home_for($me), 'Back', '', 'max-w-2xl');
