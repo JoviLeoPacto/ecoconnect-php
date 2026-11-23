@@ -138,11 +138,39 @@ function privacy_modal(): string {
     return modal('Data Privacy Notice', 'Republic Act No. 10173 — Data Privacy Act of 2012', '', $b,
         '<button type="button" data-modal-close class="eco-btn eco-btn-outline">Close</button><button type="button" data-accept-privacy data-modal-close class="eco-btn eco-btn-green">I understand and accept</button>', 'lg', 'privacy', true);
 }
+/** Web banner (display-ad style): brand → headline → visual → offer → CTA. Uses live data when there is any. */
+function promo_banner(string $cta = 'register.php'): string {
+    $neighbors = 0; $ev = null; $rw = [];
+    try {
+        $neighbors = (int)val("SELECT COUNT(*) FROM users WHERE role = 'resident' AND is_verified = 1");
+        $ev = one("SELECT title, date, points_reward FROM events WHERE status = 'upcoming' AND date >= CURDATE() ORDER BY date, time LIMIT 1");
+        $rw = all('SELECT name, icon, points_cost FROM rewards WHERE is_active = 1 AND stock > 0 ORDER BY points_cost LIMIT 3');
+    } catch (Throwable $e) {}
+    $ev = $ev ?: ['title' => 'Barangay Clean-up Drive', 'date' => null, 'points_reward' => 20];
+    if (!$rw) $rw = [['name' => 'Rice (1 kg)', 'icon' => "\u{1F35A}", 'points_cost' => 40], ['name' => 'Tree seedling', 'icon' => "\u{1F331}", 'points_cost' => 25], ['name' => 'Eco bag', 'icon' => "\u{1F45C}", 'points_cost' => 60]];
+    $when = $ev['date'] ? date('D, M j', strtotime($ev['date'])) : 'Saturday · 7:00 AM';
+    $h = '<aside aria-label="EcoConnect" class="relative overflow-hidden rounded-2xl border-2 border-brand-400/60 p-6 text-white shadow-xl sm:p-9" style="background:radial-gradient(520px 320px at 100% 0%,rgba(74,222,128,.35),transparent 70%),linear-gradient(135deg,#052e16 0%,#14532d 55%,#15803d 100%)">'
+        . '<div class="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">'
+        . '<div class="min-w-0 lg:max-w-[500px]"><div class="flex items-center gap-2.5"><img src="icon-192.png" alt="" class="h-10 w-10 rounded-xl"><span class="text-lg font-extrabold tracking-tight">EcoConnect</span></div>'
+        . '<p class="mt-5 inline-block rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-100">For residents of Tiniguiban, Santa Monica &amp; Tagburos</p>'
+        . '<h2 class="mt-3 text-[34px] font-extrabold leading-[1.02] tracking-tight sm:text-5xl">Clean up your barangay.<br><span style="color:#86efac">Earn real rewards.</span></h2>'
+        . '<p class="mt-4 max-w-md text-base leading-relaxed text-white/85">Join a cleanup drive, show your QR ticket, and watch your Eco-Points grow. Trade them for rewards at your barangay hall.</p>'
+        . '<ul class="mt-5 flex flex-wrap gap-2 text-sm font-semibold"><li class="rounded-full bg-white/15 px-3.5 py-1.5">🧹 Join drives</li><li class="rounded-full bg-white/15 px-3.5 py-1.5">🏅 Earn points</li><li class="rounded-full bg-white/15 px-3.5 py-1.5">🎁 Claim rewards</li></ul>'
+        . '<div class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3"><a href="' . e($cta) . '" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 text-lg font-extrabold shadow-lg transition hover:-translate-y-0.5 hover:bg-brand-50" style="color:#14532d">Create your account ' . ic('chev', 'h-5 w-5 -rotate-90') . '</a>'
+        . '<span class="max-w-[220px] text-xs leading-snug text-white/75">' . ($neighbors >= 3 ? 'Join ' . $neighbors . ' neighbors already earning Eco-Points. ' : '') . 'You’ll need a valid ID to sign up.</span></div></div>'
+        . '<div class="mx-auto w-full max-w-[340px] shrink-0 space-y-3 lg:mx-0" aria-hidden="true">'
+        . '<div class="rounded-2xl bg-white p-4 text-slate-900 shadow-2xl"><p class="text-[11px] font-bold uppercase tracking-wider text-brand-700">Next cleanup drive</p><p class="mt-1 text-base font-extrabold">' . e($ev['title']) . '</p><p class="text-xs text-slate-500">' . e($when) . '</p>'
+        . '<div class="mt-3 flex items-center justify-between"><span class="rounded-full bg-brand-100 px-3 py-1 text-xs font-bold text-brand-800">+' . (int)$ev['points_reward'] . ' pts</span><span class="rounded-lg bg-brand-700 px-5 py-2 text-sm font-bold text-white">Join</span></div></div>'
+        . '<div class="rounded-2xl bg-white/95 p-4 text-slate-900 shadow-xl"><p class="text-[11px] font-bold uppercase tracking-wider text-brand-700">Rewards you can claim</p><div class="mt-2 grid grid-cols-3 gap-2 text-center">';
+    foreach ($rw as $r) $h .= '<div class="rounded-xl bg-slate-50 px-1 py-2"><div class="text-2xl leading-none">' . e($r['icon']) . '</div><p class="mt-1 truncate text-[11px] font-semibold">' . e($r['name']) . '</p><p class="text-[11px] font-bold text-brand-700">' . (int)$r['points_cost'] . ' pts</p></div>';
+    return $h . '</div></div></div></div></aside>';
+}
 function auth_start(string $title, string $subtitle = '', string $aside = '', string $back = ''): void {
     page_head($title . ' · EcoConnect');
     echo '<div class="min-h-screen bg-white flex flex-col"><header class="px-5 sm:px-8 pt-6 flex items-center justify-between">'
         . brand_link('index.php', 'rounded-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-600/20')
         . '<div class="flex items-center gap-3">' . $back . theme_toggle() . '</div></header>'
+        . (!empty($GLOBALS['__promo']) ? '<div class="mx-auto mt-6 w-full max-w-[920px] px-5">' . $GLOBALS['__promo'] . '</div>' : '')
         . '<main class="flex-1 flex items-start sm:items-center justify-center px-5 py-10"><div class="' . ($aside ? 'grid w-full max-w-[400px] items-center gap-10 lg:max-w-[920px] lg:grid-cols-[400px_1fr] lg:gap-16' : 'w-full max-w-[400px]') . '"><div class="w-full">'
         . '<div class="text-center mb-8"><h1 class="text-[28px] sm:text-[32px] leading-tight font-bold tracking-tight text-slate-900">' . e($title) . '</h1>'
         . ($subtitle !== '' ? '<p class="mt-2 text-sm text-slate-500">' . e($subtitle) . '</p>' : '') . '</div>';

@@ -40,6 +40,7 @@ else {
 }
 $aside .= '</div></section>';
 
+$GLOBALS['__promo'] = promo_banner();
 auth_start('Welcome to EcoConnect', 'Sign in to join cleanup drives, earn Eco-Points, and manage your barangay.', $aside);
 echo form_error($error);
 ?>
