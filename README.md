@@ -1,11 +1,5 @@
 # EcoConnect – PHP + MySQL edition
 
-## Run it (XAMPP)
-1. Copy the `ecoconnect-php` folder into `C:\xampp\htdocs\`.
-2. Start **Apache** and **MySQL** in the XAMPP Control Panel.
-3. Open http://localhost/ecoconnect-php/setup.php and press the button (creates `ecoconnect_db` + starter accounts).
-   Or import `database/ecoconnect.sql` in phpMyAdmin instead.
-4. **Delete `setup.php`**, then log in at http://localhost/ecoconnect-php/
 
 Starter accounts: `official` / `Official123!` (Barangay Official, Tiniguiban) and `resident` / `Resident123!`.
 Database login is in `config.php` (XAMPP default: root, no password).
